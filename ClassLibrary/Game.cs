@@ -218,7 +218,7 @@ namespace ChessLibrary
         }
 
 		// Reset the game board and all player status
-		public void Reset()
+		public void Reset(bool game960 = false)
 		{
 			m_MovesHistory.Clear();
 			m_RedoMovesHistory.Clear();
@@ -229,7 +229,10 @@ namespace ChessLibrary
 
             GameTurn = Side.SideType.White;	// In chess first turn is always of white
 			m_WhitePlayer.TimeStart();	// Player time starts
-			Board.Init();	// Initialize the board object
+            if (game960)
+                Board.Init960();    // Initialize the board object as a Chess960 game
+            else
+			    Board.Init();	// Initialize the board object as a normal game
 		}
 
 		// Return back the white player reference

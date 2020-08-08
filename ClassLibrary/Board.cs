@@ -68,6 +68,29 @@ namespace ChessLibrary
 				m_cells[7, col].piece = new Piece(Piece.PieceType.Pawn,m_WhiteSide);
 		}
 
+        public void Init960()
+        {
+            m_cells.Clear();        // Remove any existing chess cells
+
+            // Build the 64 chess board cells
+            for (int row = 1; row <= 8; row++)
+                for (int col = 1; col <= 8; col++)
+                {
+                    m_cells.Add(new Cell(row, col));    // Initialize and add the new chess cell
+                }
+
+            // Perform random setup for the black side, mirroring on the white side as it goes
+            Random rand = new Random();
+            bool[] takenSpots = new bool[8];
+            //then pick 1,3,5,7 and place a bishop and cross the number
+            int index = (rand.Next(3) * 2) + 97;
+            m_cells[$"{(char)index}1"].piece = new Piece(Piece.PieceType.Bishop, m_WhiteSide);
+            //then pick 2,4,6,8 and place a bishop and cross the number
+            //then pick a number 1-8 [and make sure the number is ok] for queen, place and cross
+            //then pick a number 1-8 [and make sure the number is ok] for knight, place and cross x2
+            //then iterate through the numbers, put a rook in the first, king in the second, rook in the third
+        }
+
 		// get the new item by rew and column
 		public Cell this[int row, int col]
 		{
