@@ -82,13 +82,70 @@ namespace ChessLibrary
             // Perform random setup for the black side, mirroring on the white side as it goes
             Random rand = new Random();
             bool[] takenSpots = new bool[8];
+            int index;
+
             //then pick 1,3,5,7 and place a bishop and cross the number
-            int index = (rand.Next(3) * 2) + 97;
-            m_cells[$"{(char)index}1"].piece = new Piece(Piece.PieceType.Bishop, m_WhiteSide);
+            index = (rand.Next(4) * 2) + 97;
+            m_cells[$"{(char)index}1"].piece = new Piece(Piece.PieceType.Bishop, m_BlackSide);
+            m_cells[$"{(char)index}8"].piece = new Piece(Piece.PieceType.Bishop, m_WhiteSide);
+            takenSpots[index - 97] = true;
+
             //then pick 2,4,6,8 and place a bishop and cross the number
+            index = (rand.Next(4) * 2) + 98;
+            m_cells[$"{(char)index}1"].piece = new Piece(Piece.PieceType.Bishop, m_BlackSide);
+            m_cells[$"{(char)index}8"].piece = new Piece(Piece.PieceType.Bishop, m_WhiteSide);
+            takenSpots[index - 97] = true;
+
             //then pick a number 1-8 [and make sure the number is ok] for queen, place and cross
+            do
+            {
+                index = rand.Next(8) + 97;
+            } while (takenSpots[index - 97]);
+            m_cells[$"{(char)index}1"].piece = new Piece(Piece.PieceType.Queen, m_BlackSide);
+            m_cells[$"{(char)index}8"].piece = new Piece(Piece.PieceType.Queen, m_WhiteSide);
+            takenSpots[index - 97] = true;
+
             //then pick a number 1-8 [and make sure the number is ok] for knight, place and cross x2
+            for (int i = 0; i < 2; i++)
+            {
+                do
+                {
+                    index = rand.Next(8) + 97;
+                } while (takenSpots[index - 97]);
+                m_cells[$"{(char)index}1"].piece = new Piece(Piece.PieceType.Knight, m_BlackSide);
+                m_cells[$"{(char)index}8"].piece = new Piece(Piece.PieceType.Knight, m_WhiteSide);
+                takenSpots[index - 97] = true;
+            }
+
             //then iterate through the numbers, put a rook in the first, king in the second, rook in the third
+            int found = 0;
+            for (int i = 0; i < takenSpots.Length; i++)
+            {
+                if (!takenSpots[i])
+                {
+                    if (found == 1)
+                    {
+                        //that means that this one is the king
+                        m_cells[$"{(char)(i + 97)}1"].piece = new Piece(Piece.PieceType.King, m_BlackSide);
+                        m_cells[$"{(char)(i + 97)}8"].piece = new Piece(Piece.PieceType.King, m_WhiteSide);
+                        takenSpots[i] = true;
+                    }
+                    else
+                    {
+                        //that means that this one is a rook
+                        m_cells[$"{(char)(i + 97)}1"].piece = new Piece(Piece.PieceType.Rook, m_BlackSide);
+                        m_cells[$"{(char)(i + 97)}8"].piece = new Piece(Piece.PieceType.Rook, m_WhiteSide);
+                        takenSpots[i] = true;
+                    }
+                    found++;
+                }
+            }
+
+            for (int col = 1; col <= 8; col++)
+                m_cells[2, col].piece = new Piece(Piece.PieceType.Pawn, m_BlackSide);
+
+            for (int col = 1; col <= 8; col++)
+                m_cells[7, col].piece = new Piece(Piece.PieceType.Pawn, m_WhiteSide);
         }
 
 		// get the new item by rew and column
